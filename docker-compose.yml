@@ -1,0 +1,58 @@
+version: "3.9"
+
+# MQTT broker is provided by the IoT simulator (iot-simulator/docker.compose.yml).
+# Start it first: cd ../iot-simulator && docker compose -f docker.compose.yml up -d
+# The API connects to mqtt://localhost:1883 when running locally,
+# or mqtt://host.docker.internal:1883 when running inside this Docker stack.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: coworking_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-coworking_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-coworking_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-coworking_db}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-coworking_user} -d ${POSTGRES_DB:-coworking_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile
+    container_name: coworking_api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: ${PORT:-3000}
+      API_KEY: ${API_KEY:-change-me-in-production}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-coworking_user}:${POSTGRES_PASSWORD:-coworking_pass}@postgres:5432/${POSTGRES_DB:-coworking_db}
+      # host.docker.internal resolves to the host machine from inside Docker (Mac/Windows).
+      # On Linux use: MQTT_BROKER_URL=mqtt://172.17.0.1:1883
+      MQTT_BROKER_URL: ${MQTT_BROKER_URL:-mqtt://host.docker.internal:1883}
+      MQTT_CLIENT_ID: ${MQTT_CLIENT_ID:-coworking-api}
+      ALERT_CO2_OPEN_WINDOW_SEC: ${ALERT_CO2_OPEN_WINDOW_SEC:-300}
+      ALERT_CO2_RESOLVE_WINDOW_SEC: ${ALERT_CO2_RESOLVE_WINDOW_SEC:-120}
+      ALERT_OCCUPANCY_MAX_OPEN_WINDOW_SEC: ${ALERT_OCCUPANCY_MAX_OPEN_WINDOW_SEC:-120}
+      ALERT_OCCUPANCY_MAX_RESOLVE_WINDOW_SEC: ${ALERT_OCCUPANCY_MAX_RESOLVE_WINDOW_SEC:-60}
+      ALERT_OCCUPANCY_UNEXPECTED_OPEN_WINDOW_SEC: ${ALERT_OCCUPANCY_UNEXPECTED_OPEN_WINDOW_SEC:-600}
+      ALERT_OCCUPANCY_UNEXPECTED_RESOLVE_WINDOW_SEC: ${ALERT_OCCUPANCY_UNEXPECTED_RESOLVE_WINDOW_SEC:-300}
+      TELEMETRY_AGGREGATION_WINDOW_MIN: ${TELEMETRY_AGGREGATION_WINDOW_MIN:-5}
+    ports:
+      - "${PORT:-3000}:3000"
+    command: >
+      sh -c "npx prisma migrate deploy && node dist/main.js"
+
+volumes:
+  postgres_data:

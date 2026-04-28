@@ -1,0 +1,342 @@
+{
+  "info": {
+    "name": "Coworking Reservation API",
+    "description": "Workspace Reservation Management System — complete API collection with IoT endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "apiKey", "value": "dev-api-key-change-in-production" },
+    { "key": "placeId", "value": "" },
+    { "key": "spaceId", "value": "" },
+    { "key": "reservationId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET /health",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/health"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Places",
+      "item": [
+        {
+          "name": "List Places",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-api-key", "value": "{{apiKey}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/places?page=1&pageSize=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "places"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Place by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-api-key", "value": "{{apiKey}}" }],
+            "url": "{{baseUrl}}/api/places/{{placeId}}"
+          }
+        },
+        {
+          "name": "Create Place",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  pm.collectionVariables.set('placeId', pm.response.json().data.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-api-key", "value": "{{apiKey}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Darien Innovation Hub\",\n  \"latitude\": 8.9936,\n  \"longitude\": -79.5197,\n  \"timezone\": \"America/Panama\"\n}"
+            },
+            "url": "{{baseUrl}}/api/places"
+          }
+        },
+        {
+          "name": "Update Place",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "x-api-key", "value": "{{apiKey}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Darien HQ — Updated\"\n}"
+            },
+            "url": "{{baseUrl}}/api/places/{{placeId}}"
+          }
+        },
+        {
+          "name": "Delete Place",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "x-api-key", "value": "{{apiKey}}" }],
+            "url": "{{baseUrl}}/api/places/{{placeId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Spaces",
+      "item": [
+        {
+          "name": "List Spaces",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-api-key", "value": "{{apiKey}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/spaces?page=1&pageSize=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "spaces"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Space by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-api-key", "value": "{{apiKey}}" }],
+            "url": "{{baseUrl}}/api/spaces/{{spaceId}}"
+          }
+        },
+        {
+          "name": "Create Space",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  pm.collectionVariables.set('spaceId', pm.response.json().data.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-api-key", "value": "{{apiKey}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"placeId\": \"{{placeId}}\",\n  \"name\": \"Meeting Room A\",\n  \"reference\": \"Floor 2, Room 201\",\n  \"capacity\": 10,\n  \"description\": \"Equipped with projector and whiteboard\",\n  \"opensAt\": \"08:00\",\n  \"closesAt\": \"20:00\"\n}"
+            },
+            "url": "{{baseUrl}}/api/spaces"
+          }
+        },
+        {
+          "name": "Update Space",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "x-api-key", "value": "{{apiKey}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"capacity\": 15,\n  \"closesAt\": \"22:00\"\n}"
+            },
+            "url": "{{baseUrl}}/api/spaces/{{spaceId}}"
+          }
+        },
+        {
+          "name": "Delete Space",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "x-api-key", "value": "{{apiKey}}" }],
+            "url": "{{baseUrl}}/api/spaces/{{spaceId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reservations",
+      "item": [
+        {
+          "name": "List Reservations",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-api-key", "value": "{{apiKey}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations?page=1&pageSize=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reservations"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Reservations (filtered by space)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-api-key", "value": "{{apiKey}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations?spaceId={{spaceId}}&page=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reservations"],
+              "query": [
+                { "key": "spaceId", "value": "{{spaceId}}" },
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Reservation by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-api-key", "value": "{{apiKey}}" }],
+            "url": "{{baseUrl}}/api/reservations/{{reservationId}}"
+          }
+        },
+        {
+          "name": "Create Reservation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  pm.collectionVariables.set('reservationId', pm.response.json().data.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-api-key", "value": "{{apiKey}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"spaceId\": \"{{spaceId}}\",\n  \"clientEmail\": \"client@example.com\",\n  \"reservationDate\": \"2025-12-15\",\n  \"startTime\": \"09:00\",\n  \"endTime\": \"11:00\"\n}"
+            },
+            "url": "{{baseUrl}}/api/reservations"
+          }
+        },
+        {
+          "name": "Update Reservation",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "x-api-key", "value": "{{apiKey}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"startTime\": \"10:00\",\n  \"endTime\": \"12:00\"\n}"
+            },
+            "url": "{{baseUrl}}/api/reservations/{{reservationId}}"
+          }
+        },
+        {
+          "name": "Delete Reservation",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "x-api-key", "value": "{{apiKey}}" }],
+            "url": "{{baseUrl}}/api/reservations/{{reservationId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "IoT",
+      "item": [
+        {
+          "name": "Get Space IoT Status",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-api-key", "value": "{{apiKey}}" }],
+            "url": "{{baseUrl}}/api/iot/spaces/{{spaceId}}/status"
+          }
+        },
+        {
+          "name": "Update Device Desired Config",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "x-api-key", "value": "{{apiKey}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"samplingIntervalSec\": 10,\n  \"co2AlertThreshold\": 900\n}"
+            },
+            "url": "{{baseUrl}}/api/iot/spaces/{{spaceId}}/desired"
+          }
+        },
+        {
+          "name": "List Space Alerts",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-api-key", "value": "{{apiKey}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/iot/spaces/{{spaceId}}/alerts?page=1&pageSize=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "iot", "spaces", "{{spaceId}}", "alerts"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Space Telemetry Aggregations",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "x-api-key", "value": "{{apiKey}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/iot/spaces/{{spaceId}}/telemetry?page=1&pageSize=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "iot", "spaces", "{{spaceId}}", "telemetry"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "20" }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
