@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const UpdateDeviceDesiredSchema = z.object({
   samplingIntervalSec: z.number().int().min(1).max(3600).optional(),

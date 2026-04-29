@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express";
-import { SpaceUseCases } from "../../application/use-cases/spaces/space.use-cases";
-import { PaginationSchema } from "../../application/dtos/reservation.dto";
-import { sendSuccess, sendPaginated } from "../../shared/utils/response.utils";
+import { Request, Response, NextFunction } from 'express';
+import { SpaceUseCases } from '../../application/use-cases/spaces/space.use-cases';
+import { PaginationSchema } from '../../application/dtos/reservation.dto';
+import { sendSuccess, sendPaginated } from '../../shared/utils/response.utils';
 
 export class SpaceController {
   constructor(private readonly useCases: SpaceUseCases) {}
@@ -19,7 +19,7 @@ export class SpaceController {
   getByPlaceId = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const params = PaginationSchema.parse(req.query);
-      const result = await this.useCases.getByPlaceId(req.params["placeId"] as string, params);
+      const result = await this.useCases.getByPlaceId(req.params['placeId'] as string, params);
       sendPaginated(res, result);
     } catch (err) {
       next(err);
@@ -28,7 +28,7 @@ export class SpaceController {
 
   getById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const space = await this.useCases.getById(req.params["id"] as string);
+      const space = await this.useCases.getById(req.params['id'] as string);
       sendSuccess(res, space);
     } catch (err) {
       next(err);
@@ -46,7 +46,7 @@ export class SpaceController {
 
   update = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const space = await this.useCases.update(req.params["id"] as string, req.body);
+      const space = await this.useCases.update(req.params['id'] as string, req.body);
       sendSuccess(res, space);
     } catch (err) {
       next(err);
@@ -55,7 +55,7 @@ export class SpaceController {
 
   delete = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      await this.useCases.delete(req.params["id"] as string);
+      await this.useCases.delete(req.params['id'] as string);
       res.status(204).send();
     } catch (err) {
       next(err);

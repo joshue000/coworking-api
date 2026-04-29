@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client";
-import { AlertEngine, TelemetryReading } from "../alert-engine/alert.engine";
-import { TELEMETRY_AGGREGATION_WINDOW_MIN } from "../../../shared/constants/alert.constants";
+import { PrismaClient } from '@prisma/client';
+import { AlertEngine, TelemetryReading } from '../alert-engine/alert.engine';
+import { TELEMETRY_AGGREGATION_WINDOW_MIN } from '../../../shared/constants/alert.constants';
 
 // In-memory buffer keyed by spaceId — accumulates raw readings per aggregation window
 const telemetryBuffers = new Map<string, TelemetryReading[]>();

@@ -1,7 +1,7 @@
-import { PrismaClient } from "@prisma/client";
-import { PlaceRepository } from "../../../domain/repositories/place.repository";
-import { Place, CreatePlaceInput, UpdatePlaceInput } from "../../../domain/entities/place.entity";
-import { PaginationParams, PaginatedResult } from "../../../shared/types/pagination.types";
+import { PrismaClient } from '@prisma/client';
+import { PlaceRepository } from '../../../domain/repositories/place.repository';
+import { Place, CreatePlaceInput, UpdatePlaceInput } from '../../../domain/entities/place.entity';
+import { PaginationParams, PaginatedResult } from '../../../shared/types/pagination.types';
 
 export class PrismaPlaceRepository implements PlaceRepository {
   constructor(private readonly prisma: PrismaClient) {}
@@ -15,7 +15,7 @@ export class PrismaPlaceRepository implements PlaceRepository {
     const skip = (page - 1) * pageSize;
 
     const [data, total] = await this.prisma.$transaction([
-      this.prisma.place.findMany({ skip, take: pageSize, orderBy: { createdAt: "desc" } }),
+      this.prisma.place.findMany({ skip, take: pageSize, orderBy: { createdAt: 'desc' } }),
       this.prisma.place.count(),
     ]);
 

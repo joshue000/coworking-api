@@ -1,7 +1,7 @@
-import { PlaceRepository } from "../../../domain/repositories/place.repository";
-import { CreatePlaceInput, UpdatePlaceInput } from "../../../domain/entities/place.entity";
-import { NotFoundError } from "../../../domain/errors/domain.errors";
-import { PaginationParams } from "../../../shared/types/pagination.types";
+import { PlaceRepository } from '../../../domain/repositories/place.repository';
+import { CreatePlaceInput, UpdatePlaceInput } from '../../../domain/entities/place.entity';
+import { NotFoundError } from '../../../domain/errors/domain.errors';
+import { PaginationParams } from '../../../shared/types/pagination.types';
 
 export class PlaceUseCases {
   constructor(private readonly placeRepository: PlaceRepository) {}
@@ -12,7 +12,7 @@ export class PlaceUseCases {
 
   async getById(id: string) {
     const place = await this.placeRepository.findById(id);
-    if (!place) throw new NotFoundError("Place", id);
+    if (!place) throw new NotFoundError('Place', id);
     return place;
   }
 

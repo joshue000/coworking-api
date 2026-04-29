@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express";
-import { PlaceUseCases } from "../../application/use-cases/places/place.use-cases";
-import { PaginationSchema } from "../../application/dtos/reservation.dto";
-import { sendSuccess, sendPaginated } from "../../shared/utils/response.utils";
+import { Request, Response, NextFunction } from 'express';
+import { PlaceUseCases } from '../../application/use-cases/places/place.use-cases';
+import { PaginationSchema } from '../../application/dtos/reservation.dto';
+import { sendSuccess, sendPaginated } from '../../shared/utils/response.utils';
 
 export class PlaceController {
   constructor(private readonly useCases: PlaceUseCases) {}
@@ -18,7 +18,7 @@ export class PlaceController {
 
   getById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const place = await this.useCases.getById(req.params["id"] as string);
+      const place = await this.useCases.getById(req.params['id'] as string);
       sendSuccess(res, place);
     } catch (err) {
       next(err);
@@ -36,7 +36,7 @@ export class PlaceController {
 
   update = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const place = await this.useCases.update(req.params["id"] as string, req.body);
+      const place = await this.useCases.update(req.params['id'] as string, req.body);
       sendSuccess(res, place);
     } catch (err) {
       next(err);
@@ -45,7 +45,7 @@ export class PlaceController {
 
   delete = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      await this.useCases.delete(req.params["id"] as string);
+      await this.useCases.delete(req.params['id'] as string);
       res.status(204).send();
     } catch (err) {
       next(err);

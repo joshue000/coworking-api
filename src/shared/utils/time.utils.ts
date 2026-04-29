@@ -2,7 +2,7 @@
  * Converts HH:mm string to total minutes since midnight.
  */
 export function timeToMinutes(time: string): number {
-  const [hours, minutes] = time.split(":").map(Number);
+  const [hours, minutes] = time.split(':').map(Number);
   return hours * 60 + minutes;
 }
 
@@ -28,7 +28,7 @@ export function doTimesOverlap(
 export function getWeekBounds(date: Date): { weekStart: Date; weekEnd: Date } {
   const d = new Date(date);
   const day = d.getUTCDay();
-  const diffToMonday = (day === 0 ? -6 : 1 - day);
+  const diffToMonday = day === 0 ? -6 : 1 - day;
 
   const weekStart = new Date(d);
   weekStart.setUTCDate(d.getUTCDate() + diffToMonday);
@@ -49,14 +49,14 @@ export function isWithinOfficeHours(
   closesAt: string,
   timezone: string
 ): boolean {
-  const localTime = new Intl.DateTimeFormat("en-US", {
+  const localTime = new Intl.DateTimeFormat('en-US', {
     timeZone: timezone,
-    hour: "2-digit",
-    minute: "2-digit",
+    hour: '2-digit',
+    minute: '2-digit',
     hour12: false,
   }).format(timestamp);
 
-  const [h, m] = localTime.split(":").map(Number);
+  const [h, m] = localTime.split(':').map(Number);
   const currentMinutes = h * 60 + m;
   const openMinutes = timeToMinutes(opensAt);
   const closeMinutes = timeToMinutes(closesAt);

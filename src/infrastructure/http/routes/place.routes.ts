@@ -1,7 +1,7 @@
-import { Router } from "express";
-import { PlaceController } from "../../controllers/place.controller";
-import { validateBody } from "../middlewares/validate.middleware";
-import { CreatePlaceSchema, UpdatePlaceSchema } from "../../../application/dtos/place.dto";
+import { Router } from 'express';
+import { PlaceController } from '../../controllers/place.controller';
+import { validateBody } from '../middlewares/validate.middleware';
+import { CreatePlaceSchema, UpdatePlaceSchema } from '../../../application/dtos/place.dto';
 
 export function createPlaceRouter(controller: PlaceController): Router {
   const router = Router();
@@ -25,7 +25,7 @@ export function createPlaceRouter(controller: PlaceController): Router {
    *       200:
    *         description: Paginated list of places
    */
-  router.get("/", controller.getAll);
+  router.get('/', controller.getAll);
 
   /**
    * @openapi
@@ -46,7 +46,7 @@ export function createPlaceRouter(controller: PlaceController): Router {
    *       404:
    *         description: Place not found
    */
-  router.get("/:id", controller.getById);
+  router.get('/:id', controller.getById);
 
   /**
    * @openapi
@@ -74,7 +74,7 @@ export function createPlaceRouter(controller: PlaceController): Router {
    *       422:
    *         description: Validation error
    */
-  router.post("/", validateBody(CreatePlaceSchema), controller.create);
+  router.post('/', validateBody(CreatePlaceSchema), controller.create);
 
   /**
    * @openapi
@@ -105,7 +105,7 @@ export function createPlaceRouter(controller: PlaceController): Router {
    *       404:
    *         description: Place not found
    */
-  router.patch("/:id", validateBody(UpdatePlaceSchema), controller.update);
+  router.patch('/:id', validateBody(UpdatePlaceSchema), controller.update);
 
   /**
    * @openapi
@@ -126,7 +126,7 @@ export function createPlaceRouter(controller: PlaceController): Router {
    *       404:
    *         description: Place not found
    */
-  router.delete("/:id", controller.delete);
+  router.delete('/:id', controller.delete);
 
   return router;
 }

@@ -1,5 +1,5 @@
-import { Router } from "express";
-import { IoTController } from "../../controllers/iot.controller";
+import { Router } from 'express';
+import { IoTController } from '../../controllers/iot.controller';
 
 export function createIoTRouter(controller: IoTController): Router {
   const router = Router();
@@ -23,7 +23,7 @@ export function createIoTRouter(controller: IoTController): Router {
    *       404:
    *         description: Space not found
    */
-  router.get("/spaces/:spaceId/status", controller.getSpaceStatus);
+  router.get('/spaces/:spaceId/status', controller.getSpaceStatus);
 
   /**
    * @openapi
@@ -52,7 +52,7 @@ export function createIoTRouter(controller: IoTController): Router {
    *       404:
    *         description: Space not found
    */
-  router.put("/spaces/:spaceId/desired", controller.updateDesired);
+  router.put('/spaces/:spaceId/desired', controller.updateDesired);
 
   /**
    * @openapi
@@ -77,7 +77,7 @@ export function createIoTRouter(controller: IoTController): Router {
    *       200:
    *         description: Paginated list of alerts
    */
-  router.get("/spaces/:spaceId/alerts", controller.getAlerts);
+  router.get('/spaces/:spaceId/alerts', controller.getAlerts);
 
   /**
    * @openapi
@@ -102,7 +102,7 @@ export function createIoTRouter(controller: IoTController): Router {
    *       200:
    *         description: Paginated telemetry aggregations
    */
-  router.get("/spaces/:spaceId/telemetry", controller.getTelemetry);
+  router.get('/spaces/:spaceId/telemetry', controller.getTelemetry);
 
   return router;
 }

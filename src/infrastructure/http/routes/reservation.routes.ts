@@ -1,7 +1,10 @@
-import { Router } from "express";
-import { ReservationController } from "../../controllers/reservation.controller";
-import { validateBody } from "../middlewares/validate.middleware";
-import { CreateReservationSchema, UpdateReservationSchema } from "../../../application/dtos/reservation.dto";
+import { Router } from 'express';
+import { ReservationController } from '../../controllers/reservation.controller';
+import { validateBody } from '../middlewares/validate.middleware';
+import {
+  CreateReservationSchema,
+  UpdateReservationSchema,
+} from '../../../application/dtos/reservation.dto';
 
 export function createReservationRouter(controller: ReservationController): Router {
   const router = Router();
@@ -37,7 +40,7 @@ export function createReservationRouter(controller: ReservationController): Rout
    *       200:
    *         description: Paginated list of reservations
    */
-  router.get("/", controller.getAll);
+  router.get('/', controller.getAll);
 
   /**
    * @openapi
@@ -58,7 +61,7 @@ export function createReservationRouter(controller: ReservationController): Rout
    *       404:
    *         description: Reservation not found
    */
-  router.get("/:id", controller.getById);
+  router.get('/:id', controller.getById);
 
   /**
    * @openapi
@@ -89,7 +92,7 @@ export function createReservationRouter(controller: ReservationController): Rout
    *       422:
    *         description: Validation error
    */
-  router.post("/", validateBody(CreateReservationSchema), controller.create);
+  router.post('/', validateBody(CreateReservationSchema), controller.create);
 
   /**
    * @openapi
@@ -112,7 +115,7 @@ export function createReservationRouter(controller: ReservationController): Rout
    *       404:
    *         description: Reservation not found
    */
-  router.patch("/:id", validateBody(UpdateReservationSchema), controller.update);
+  router.patch('/:id', validateBody(UpdateReservationSchema), controller.update);
 
   /**
    * @openapi
@@ -133,7 +136,7 @@ export function createReservationRouter(controller: ReservationController): Rout
    *       404:
    *         description: Reservation not found
    */
-  router.delete("/:id", controller.delete);
+  router.delete('/:id', controller.delete);
 
   return router;
 }

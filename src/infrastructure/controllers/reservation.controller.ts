@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express";
-import { ReservationUseCases } from "../../application/use-cases/reservations/reservation.use-cases";
-import { PaginationSchema, ReservationFiltersSchema } from "../../application/dtos/reservation.dto";
-import { sendSuccess, sendPaginated } from "../../shared/utils/response.utils";
+import { Request, Response, NextFunction } from 'express';
+import { ReservationUseCases } from '../../application/use-cases/reservations/reservation.use-cases';
+import { PaginationSchema, ReservationFiltersSchema } from '../../application/dtos/reservation.dto';
+import { sendSuccess, sendPaginated } from '../../shared/utils/response.utils';
 
 export class ReservationController {
   constructor(private readonly useCases: ReservationUseCases) {}
@@ -19,7 +19,7 @@ export class ReservationController {
 
   getById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const reservation = await this.useCases.getById(req.params["id"] as string);
+      const reservation = await this.useCases.getById(req.params['id'] as string);
       sendSuccess(res, reservation);
     } catch (err) {
       next(err);
@@ -37,7 +37,7 @@ export class ReservationController {
 
   update = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const reservation = await this.useCases.update(req.params["id"] as string, req.body);
+      const reservation = await this.useCases.update(req.params['id'] as string, req.body);
       sendSuccess(res, reservation);
     } catch (err) {
       next(err);
@@ -46,7 +46,7 @@ export class ReservationController {
 
   delete = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      await this.useCases.delete(req.params["id"] as string);
+      await this.useCases.delete(req.params['id'] as string);
       res.status(204).send();
     } catch (err) {
       next(err);

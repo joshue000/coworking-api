@@ -1,30 +1,30 @@
-import "dotenv/config";
-import prisma from "./infrastructure/database/prisma.client";
-import { connectMqtt } from "./infrastructure/mqtt/mqtt.client";
-import { setupMqttSubscriptions } from "./infrastructure/mqtt/mqtt.subscriber";
-import { createApp } from "./infrastructure/http/server";
+import 'dotenv/config';
+import prisma from './infrastructure/database/prisma.client';
+import { connectMqtt } from './infrastructure/mqtt/mqtt.client';
+import { setupMqttSubscriptions } from './infrastructure/mqtt/mqtt.subscriber';
+import { createApp } from './infrastructure/http/server';
 
-import { PrismaPlaceRepository } from "./infrastructure/database/repositories/prisma-place.repository";
-import { PrismaSpaceRepository } from "./infrastructure/database/repositories/prisma-space.repository";
-import { PrismaReservationRepository } from "./infrastructure/database/repositories/prisma-reservation.repository";
+import { PrismaPlaceRepository } from './infrastructure/database/repositories/prisma-place.repository';
+import { PrismaSpaceRepository } from './infrastructure/database/repositories/prisma-space.repository';
+import { PrismaReservationRepository } from './infrastructure/database/repositories/prisma-reservation.repository';
 
-import { PlaceUseCases } from "./application/use-cases/places/place.use-cases";
-import { SpaceUseCases } from "./application/use-cases/spaces/space.use-cases";
-import { ReservationUseCases } from "./application/use-cases/reservations/reservation.use-cases";
+import { PlaceUseCases } from './application/use-cases/places/place.use-cases';
+import { SpaceUseCases } from './application/use-cases/spaces/space.use-cases';
+import { ReservationUseCases } from './application/use-cases/reservations/reservation.use-cases';
 
-import { PlaceController } from "./infrastructure/controllers/place.controller";
-import { SpaceController } from "./infrastructure/controllers/space.controller";
-import { ReservationController } from "./infrastructure/controllers/reservation.controller";
-import { IoTController } from "./infrastructure/controllers/iot.controller";
+import { PlaceController } from './infrastructure/controllers/place.controller';
+import { SpaceController } from './infrastructure/controllers/space.controller';
+import { ReservationController } from './infrastructure/controllers/reservation.controller';
+import { IoTController } from './infrastructure/controllers/iot.controller';
 
-import { AlertEngine } from "./infrastructure/mqtt/alert-engine/alert.engine";
-import { TelemetryHandler } from "./infrastructure/mqtt/handlers/telemetry.handler";
-import { ReportedHandler } from "./infrastructure/mqtt/handlers/reported.handler";
-import { DesiredPublisher } from "./infrastructure/mqtt/publishers/desired.publisher";
+import { AlertEngine } from './infrastructure/mqtt/alert-engine/alert.engine';
+import { TelemetryHandler } from './infrastructure/mqtt/handlers/telemetry.handler';
+import { ReportedHandler } from './infrastructure/mqtt/handlers/reported.handler';
+import { DesiredPublisher } from './infrastructure/mqtt/publishers/desired.publisher';
 
 async function bootstrap(): Promise<void> {
   await prisma.$connect();
-  console.log("[DB] Connected to PostgreSQL");
+  console.log('[DB] Connected to PostgreSQL');
 
   // Repositories
   const placeRepo = new PrismaPlaceRepository(prisma);
@@ -66,7 +66,7 @@ async function bootstrap(): Promise<void> {
 
   const app = createApp(placeController, spaceController, reservationController, iotController);
 
-  const port = parseInt(process.env.PORT ?? "3000");
+  const port = parseInt(process.env.PORT ?? '3000');
   app.listen(port, () => {
     console.log(`[HTTP] Server running on http://localhost:${port}`);
     console.log(`[HTTP] API docs at http://localhost:${port}/api-docs`);
@@ -74,16 +74,16 @@ async function bootstrap(): Promise<void> {
 
   // Graceful shutdown
   const shutdown = async () => {
-    console.log("[App] Shutting down...");
+    console.log('[App] Shutting down...');
     await prisma.$disconnect();
     process.exit(0);
   };
 
-  process.on("SIGINT", shutdown);
-  process.on("SIGTERM", shutdown);
+  process.on('SIGINT', shutdown);
+  process.on('SIGTERM', shutdown);
 }
 
 bootstrap().catch((err) => {
-  console.error("[App] Fatal error during startup:", err);
+  console.error('[App] Fatal error during startup:', err);
   process.exit(1);
 });

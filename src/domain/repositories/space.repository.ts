@@ -1,5 +1,5 @@
-import { Space, CreateSpaceInput, UpdateSpaceInput } from "../entities/space.entity";
-import { PaginationParams, PaginatedResult } from "../../shared/types/pagination.types";
+import { Space, CreateSpaceInput, UpdateSpaceInput } from '../entities/space.entity';
+import { PaginationParams, PaginatedResult } from '../../shared/types/pagination.types';
 
 export interface SpaceRepository {
   findById(id: string): Promise<Space | null>;

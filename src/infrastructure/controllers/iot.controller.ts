@@ -1,10 +1,10 @@
-import { Request, Response, NextFunction } from "express";
-import { PrismaClient, Prisma } from "@prisma/client";
-import { DesiredPublisher } from "../mqtt/publishers/desired.publisher";
-import { UpdateDeviceDesiredSchema } from "../../application/dtos/device.dto";
-import { sendSuccess } from "../../shared/utils/response.utils";
-import { NotFoundError } from "../../domain/errors/domain.errors";
-import { PaginationSchema } from "../../application/dtos/reservation.dto";
+import { Request, Response, NextFunction } from 'express';
+import { PrismaClient } from '@prisma/client';
+import { DesiredPublisher } from '../mqtt/publishers/desired.publisher';
+import { UpdateDeviceDesiredSchema } from '../../application/dtos/device.dto';
+import { sendSuccess } from '../../shared/utils/response.utils';
+import { NotFoundError } from '../../domain/errors/domain.errors';
+import { PaginationSchema } from '../../application/dtos/reservation.dto';
 
 export class IoTController {
   constructor(
@@ -14,22 +14,22 @@ export class IoTController {
 
   getSpaceStatus = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const spaceId = req.params["spaceId"] as string;
+      const spaceId = req.params['spaceId'] as string;
 
       const space = await this.prisma.space.findUnique({
         where: { id: spaceId },
         include: { place: true, deviceDesired: true, deviceReported: true },
       });
-      if (!space) throw new NotFoundError("Space", spaceId);
+      if (!space) throw new NotFoundError('Space', spaceId);
 
       const latestAggregation = await this.prisma.telemetryAggregation.findFirst({
         where: { spaceId: space.id },
-        orderBy: { windowEnd: "desc" },
+        orderBy: { windowEnd: 'desc' },
       });
 
       const activeAlert = await this.prisma.alert.findFirst({
         where: { spaceId: space.id, resolvedAt: null },
-        orderBy: { startedAt: "desc" },
+        orderBy: { startedAt: 'desc' },
       });
 
       sendSuccess(res, {
@@ -53,13 +53,13 @@ export class IoTController {
 
   updateDesired = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const spaceId = req.params["spaceId"] as string;
+      const spaceId = req.params['spaceId'] as string;
 
       const space = await this.prisma.space.findUnique({
         where: { id: spaceId },
         include: { place: true },
       });
-      if (!space) throw new NotFoundError("Space", spaceId);
+      if (!space) throw new NotFoundError('Space', spaceId);
 
       const dto = UpdateDeviceDesiredSchema.parse(req.body);
 
@@ -82,10 +82,10 @@ export class IoTController {
 
   getAlerts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const spaceId = req.params["spaceId"] as string;
+      const spaceId = req.params['spaceId'] as string;
 
       const space = await this.prisma.space.findUnique({ where: { id: spaceId } });
-      if (!space) throw new NotFoundError("Space", spaceId);
+      if (!space) throw new NotFoundError('Space', spaceId);
 
       const { page, pageSize } = PaginationSchema.parse(req.query);
       const skip = (page - 1) * pageSize;
@@ -95,7 +95,7 @@ export class IoTController {
           where: { spaceId: space.id },
           skip,
           take: pageSize,
-          orderBy: { startedAt: "desc" },
+          orderBy: { startedAt: 'desc' },
         }),
         this.prisma.alert.count({ where: { spaceId: space.id } }),
       ]);
@@ -112,10 +112,10 @@ export class IoTController {
 
   getTelemetry = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const spaceId = req.params["spaceId"] as string;
+      const spaceId = req.params['spaceId'] as string;
 
       const space = await this.prisma.space.findUnique({ where: { id: spaceId } });
-      if (!space) throw new NotFoundError("Space", spaceId);
+      if (!space) throw new NotFoundError('Space', spaceId);
 
       const { page, pageSize } = PaginationSchema.parse(req.query);
       const skip = (page - 1) * pageSize;
@@ -125,7 +125,7 @@ export class IoTController {
           where: { spaceId: space.id },
           skip,
           take: pageSize,
-          orderBy: { windowEnd: "desc" },
+          orderBy: { windowEnd: 'desc' },
         }),
         this.prisma.telemetryAggregation.count({ where: { spaceId: space.id } }),
       ]);

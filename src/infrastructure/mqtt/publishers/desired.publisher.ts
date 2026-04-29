@@ -1,5 +1,5 @@
-import { MqttClient } from "mqtt";
-import { MQTT_TOPICS } from "../../../shared/constants/alert.constants";
+import { MqttClient } from 'mqtt';
+import { MQTT_TOPICS } from '../../../shared/constants/alert.constants';
 
 export interface DesiredPayload {
   samplingIntervalSec: number;

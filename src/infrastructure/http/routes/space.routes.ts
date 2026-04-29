@@ -1,7 +1,7 @@
-import { Router } from "express";
-import { SpaceController } from "../../controllers/space.controller";
-import { validateBody } from "../middlewares/validate.middleware";
-import { CreateSpaceSchema, UpdateSpaceSchema } from "../../../application/dtos/space.dto";
+import { Router } from 'express';
+import { SpaceController } from '../../controllers/space.controller';
+import { validateBody } from '../middlewares/validate.middleware';
+import { CreateSpaceSchema, UpdateSpaceSchema } from '../../../application/dtos/space.dto';
 
 export function createSpaceRouter(controller: SpaceController): Router {
   const router = Router();
@@ -25,7 +25,7 @@ export function createSpaceRouter(controller: SpaceController): Router {
    *       200:
    *         description: Paginated list of spaces
    */
-  router.get("/", controller.getAll);
+  router.get('/', controller.getAll);
 
   /**
    * @openapi
@@ -46,7 +46,7 @@ export function createSpaceRouter(controller: SpaceController): Router {
    *       404:
    *         description: Space not found
    */
-  router.get("/:id", controller.getById);
+  router.get('/:id', controller.getById);
 
   /**
    * @openapi
@@ -79,7 +79,7 @@ export function createSpaceRouter(controller: SpaceController): Router {
    *       422:
    *         description: Validation error
    */
-  router.post("/", validateBody(CreateSpaceSchema), controller.create);
+  router.post('/', validateBody(CreateSpaceSchema), controller.create);
 
   /**
    * @openapi
@@ -100,7 +100,7 @@ export function createSpaceRouter(controller: SpaceController): Router {
    *       404:
    *         description: Space not found
    */
-  router.patch("/:id", validateBody(UpdateSpaceSchema), controller.update);
+  router.patch('/:id', validateBody(UpdateSpaceSchema), controller.update);
 
   /**
    * @openapi
@@ -121,7 +121,7 @@ export function createSpaceRouter(controller: SpaceController): Router {
    *       404:
    *         description: Space not found
    */
-  router.delete("/:id", controller.delete);
+  router.delete('/:id', controller.delete);
 
   return router;
 }

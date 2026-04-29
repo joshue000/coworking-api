@@ -1,6 +1,6 @@
-import { PrismaClient, AlertKind, Prisma } from "@prisma/client";
-import { ALERT_WINDOWS } from "../../../shared/constants/alert.constants";
-import { isWithinOfficeHours } from "../../../shared/utils/time.utils";
+import { PrismaClient, AlertKind, Prisma } from '@prisma/client';
+import { ALERT_WINDOWS } from '../../../shared/constants/alert.constants';
+import { isWithinOfficeHours } from '../../../shared/utils/time.utils';
 
 export interface TelemetryReading {
   ts: string;
@@ -56,7 +56,12 @@ export class AlertEngine {
     ]);
   }
 
-  private async evaluateCo2(spaceId: string, reading: TelemetryReading, now: Date, threshold: number): Promise<void> {
+  private async evaluateCo2(
+    spaceId: string,
+    reading: TelemetryReading,
+    now: Date,
+    threshold: number
+  ): Promise<void> {
     await this.processAlertState({
       spaceId,
       kind: AlertKind.CO2,
@@ -70,7 +75,12 @@ export class AlertEngine {
     });
   }
 
-  private async evaluateOccupancyMax(spaceId: string, reading: TelemetryReading, now: Date, capacity: number): Promise<void> {
+  private async evaluateOccupancyMax(
+    spaceId: string,
+    reading: TelemetryReading,
+    now: Date,
+    capacity: number
+  ): Promise<void> {
     await this.processAlertState({
       spaceId,
       kind: AlertKind.OCCUPANCY_MAX,
@@ -93,23 +103,26 @@ export class AlertEngine {
   ): Promise<void> {
     const withinHours = isWithinOfficeHours(now, space.opensAt, space.closesAt, timezone);
     let isAnomalous = false;
-    let reason = "";
+    let reason = '';
 
     if (!withinHours && reading.occupancy > 0) {
       isAnomalous = true;
-      reason = "outside_office_hours";
+      reason = 'outside_office_hours';
     } else if (withinHours && reading.occupancy > 0) {
       const hasActiveReservation = await this.prisma.reservation.findFirst({
         where: {
           spaceId,
-          reservationDate: { gte: new Date(now.toISOString().split("T")[0]), lte: new Date(now.toISOString().split("T")[0]) },
+          reservationDate: {
+            gte: new Date(now.toISOString().split('T')[0]),
+            lte: new Date(now.toISOString().split('T')[0]),
+          },
           startTime: { lte: this.toHHmm(now, timezone) },
           endTime: { gte: this.toHHmm(now, timezone) },
         },
       });
       if (!hasActiveReservation) {
         isAnomalous = true;
-        reason = "no_active_reservation";
+        reason = 'no_active_reservation';
       }
     }
 
@@ -138,7 +151,17 @@ export class AlertEngine {
     immediateResolve: boolean;
     meta: Prisma.InputJsonObject;
   }): Promise<void> {
-    const { spaceId, kind, state, isAnomalous, now, openWindowSec, resolveWindowSec, immediateResolve, meta } = opts;
+    const {
+      spaceId,
+      kind,
+      state,
+      isAnomalous,
+      now,
+      openWindowSec,
+      resolveWindowSec,
+      immediateResolve,
+      meta,
+    } = opts;
 
     const activeAlert = await this.prisma.alert.findFirst({
       where: { spaceId, kind, resolvedAt: null },
@@ -163,14 +186,20 @@ export class AlertEngine {
 
       if (activeAlert) {
         if (immediateResolve) {
-          await this.prisma.alert.update({ where: { id: activeAlert.id }, data: { resolvedAt: now } });
+          await this.prisma.alert.update({
+            where: { id: activeAlert.id },
+            data: { resolvedAt: now },
+          });
           console.log(`[AlertEngine] RESOLVED alert ${kind} for space ${spaceId} (immediate)`);
           state.recoverySince = null;
         } else {
           if (!state.recoverySince) {
             state.recoverySince = now;
           } else if (elapsedSec(state.recoverySince, now) >= resolveWindowSec) {
-            await this.prisma.alert.update({ where: { id: activeAlert.id }, data: { resolvedAt: now } });
+            await this.prisma.alert.update({
+              where: { id: activeAlert.id },
+              data: { resolvedAt: now },
+            });
             console.log(`[AlertEngine] RESOLVED alert ${kind} for space ${spaceId}`);
             state.recoverySince = null;
           }
@@ -184,10 +213,10 @@ export class AlertEngine {
   }
 
   private toHHmm(date: Date, timezone: string): string {
-    return new Intl.DateTimeFormat("en-US", {
+    return new Intl.DateTimeFormat('en-US', {
       timeZone: timezone,
-      hour: "2-digit",
-      minute: "2-digit",
+      hour: '2-digit',
+      minute: '2-digit',
       hour12: false,
     }).format(date);
   }

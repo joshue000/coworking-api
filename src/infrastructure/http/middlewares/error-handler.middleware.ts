@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from "express";
-import { ZodError } from "zod";
-import { DomainError } from "../../../domain/errors/domain.errors";
+import { Request, Response, NextFunction } from 'express';
+import { ZodError } from 'zod';
+import { DomainError } from '../../../domain/errors/domain.errors';
 
 export function errorHandlerMiddleware(
   err: Error,
@@ -12,8 +12,8 @@ export function errorHandlerMiddleware(
     res.status(422).json({
       success: false,
       error: {
-        message: "Validation failed",
-        details: err.errors.map((e) => ({ field: e.path.join("."), message: e.message })),
+        message: 'Validation failed',
+        details: err.errors.map((e) => ({ field: e.path.join('.'), message: e.message })),
       },
     });
     return;
@@ -24,6 +24,6 @@ export function errorHandlerMiddleware(
     return;
   }
 
-  console.error("[Unhandled error]", err);
-  res.status(500).json({ success: false, error: { message: "Internal server error" } });
+  console.error('[Unhandled error]', err);
+  res.status(500).json({ success: false, error: { message: 'Internal server error' } });
 }

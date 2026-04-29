@@ -1,8 +1,15 @@
-import { PrismaClient } from "@prisma/client";
-import { ReservationRepository, ReservationFilters } from "../../../domain/repositories/reservation.repository";
-import { Reservation, CreateReservationInput, UpdateReservationInput } from "../../../domain/entities/reservation.entity";
-import { PaginationParams, PaginatedResult } from "../../../shared/types/pagination.types";
-import { getWeekBounds } from "../../../shared/utils/time.utils";
+import { PrismaClient } from '@prisma/client';
+import {
+  ReservationRepository,
+  ReservationFilters,
+} from '../../../domain/repositories/reservation.repository';
+import {
+  Reservation,
+  CreateReservationInput,
+  UpdateReservationInput,
+} from '../../../domain/entities/reservation.entity';
+import { PaginationParams, PaginatedResult } from '../../../shared/types/pagination.types';
+import { getWeekBounds } from '../../../shared/utils/time.utils';
 
 export class PrismaReservationRepository implements ReservationRepository {
   constructor(private readonly prisma: PrismaClient) {}
@@ -11,13 +18,22 @@ export class PrismaReservationRepository implements ReservationRepository {
     return this.prisma.reservation.findUnique({ where: { id }, include: { space: true } });
   }
 
-  async findAll(filters: ReservationFilters, params: PaginationParams): Promise<PaginatedResult<Reservation>> {
+  async findAll(
+    filters: ReservationFilters,
+    params: PaginationParams
+  ): Promise<PaginatedResult<Reservation>> {
     const { page, pageSize } = params;
     const skip = (page - 1) * pageSize;
     const where = this.buildWhereClause(filters);
 
     const [data, total] = await this.prisma.$transaction([
-      this.prisma.reservation.findMany({ where, skip, take: pageSize, orderBy: { reservationDate: "desc" }, include: { space: true } }),
+      this.prisma.reservation.findMany({
+        where,
+        skip,
+        take: pageSize,
+        orderBy: { reservationDate: 'desc' },
+        include: { space: true },
+      }),
       this.prisma.reservation.count({ where }),
     ]);
 
@@ -39,10 +55,7 @@ export class PrismaReservationRepository implements ReservationRepository {
         reservationDate,
         id: excludeId ? { not: excludeId } : undefined,
         // startTime < endTime AND endTime > startTime → overlap
-        AND: [
-          { startTime: { lt: endTime } },
-          { endTime: { gt: startTime } },
-        ],
+        AND: [{ startTime: { lt: endTime } }, { endTime: { gt: startTime } }],
       },
     });
   }

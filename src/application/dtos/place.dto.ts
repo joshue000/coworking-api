@@ -1,10 +1,10 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const CreatePlaceSchema = z.object({
   name: z.string().min(1).max(255),
   latitude: z.number().min(-90).max(90),
   longitude: z.number().min(-180).max(180),
-  timezone: z.string().optional().default("America/Panama"),
+  timezone: z.string().optional().default('America/Panama'),
 });
 
 export const UpdatePlaceSchema = z.object({

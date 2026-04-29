@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
@@ -7,16 +7,16 @@ export const CreateReservationSchema = z.object({
   spaceId: z.string().cuid(),
   clientName: z.string().min(2),
   clientEmail: z.string().email(),
-  reservationDate: z.string().regex(dateRegex, "Must be in YYYY-MM-DD format"),
-  startTime: z.string().regex(timeRegex, "Must be in HH:mm format"),
-  endTime: z.string().regex(timeRegex, "Must be in HH:mm format"),
+  reservationDate: z.string().regex(dateRegex, 'Must be in YYYY-MM-DD format'),
+  startTime: z.string().regex(timeRegex, 'Must be in HH:mm format'),
+  endTime: z.string().regex(timeRegex, 'Must be in HH:mm format'),
 });
 
 export const UpdateReservationSchema = z.object({
   clientName: z.string().min(2).optional(),
-  reservationDate: z.string().regex(dateRegex, "Must be in YYYY-MM-DD format").optional(),
-  startTime: z.string().regex(timeRegex, "Must be in HH:mm format").optional(),
-  endTime: z.string().regex(timeRegex, "Must be in HH:mm format").optional(),
+  reservationDate: z.string().regex(dateRegex, 'Must be in YYYY-MM-DD format').optional(),
+  startTime: z.string().regex(timeRegex, 'Must be in HH:mm format').optional(),
+  endTime: z.string().regex(timeRegex, 'Must be in HH:mm format').optional(),
 });
 
 export const PaginationSchema = z.object({

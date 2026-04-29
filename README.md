@@ -211,14 +211,33 @@ All windows are configurable via environment variables.
 # Unit tests only (no DB required)
 npm run test:unit
 
-# Integration tests (requires PostgreSQL on TEST_DATABASE_URL)
+# Integration tests (requires PostgreSQL — set TEST_DATABASE_URL or start postgres first)
 npm run test:integration
 
-# All tests with coverage
+# All tests with coverage report
 npm run test:coverage
 ```
 
-> Integration tests connect to `TEST_DATABASE_URL` (defaults to `coworking_test` database).
+> Integration tests connect to `TEST_DATABASE_URL`.
+> Default: `postgresql://coworking_user:coworking_pass@localhost:5432/coworking_test`
+
+---
+
+## Linting & Formatting
+
+```bash
+# Check for lint errors
+npm run lint
+
+# Auto-fix lint errors
+npm run lint:fix
+
+# Check code formatting
+npm run format:check
+
+# Apply code formatting
+npm run format
+```
 
 ---
 
