@@ -2,12 +2,12 @@ name: API CI
 
 on:
   push:
-    branches: [main]
+    branches: [master]
     paths:
       - '**'
       - '.github/workflows/ci.yml'
   pull_request:
-    branches: [main]
+    branches: [master]
     paths:
       - '**'
       - '.github/workflows/ci.yml'
